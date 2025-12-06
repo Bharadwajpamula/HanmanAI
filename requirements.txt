@@ -1,0 +1,8 @@
+SpeechRecognition
+pyttsx3
+pywhatkit
+google-generativeai
+PyMuPDF
+requests
+deep-translator
+python-dotenv
