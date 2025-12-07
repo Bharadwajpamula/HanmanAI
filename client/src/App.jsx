@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function App() {
   const [messages, setMessages] = useState([
-    { role: 'model', text: 'Hello! I am Hanuman. How can I help you today?' }
+    { role: 'model', text: 'Hello! I am HanmanAI. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -141,7 +141,7 @@ function App() {
 
         <div style={{ marginTop: '10px', textAlign: 'center' }}>
           <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
-            Try saying: "Play believers on YouTube" or "Open Calculator"
+            Try saying anything...
           </span>
         </div>
       </motion.div>

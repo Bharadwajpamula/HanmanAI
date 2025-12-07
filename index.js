@@ -12,12 +12,22 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection (Optional if reminders removed, but keeping connection logic for now)
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hanuman')
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log('MongoDB connection error:', err));
+
+// if (process.env.MONGO_URI) {
+//   mongoose.connect(process.env.MONGO_URI)
+//     .then(() => console.log('MongoDB Connected'))
+//     .catch(err => console.log('MongoDB connection error:', err));
+// } else {
+//   console.log('MONGO_URI not set – skipping MongoDB connection.');
+// }
+
 
 // Gemini Setup
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'YOUR_API_KEY');
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY is not set in environment variables.");
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // Helper: Open Application
@@ -63,24 +73,23 @@ app.post('/api/chat', async (req, res) => {
 
     // --- Command Parsing Logic ---
 
-    // Open Website
-    if (lowerPrompt.startsWith('open ')) {
-        const target = prompt.substring(5).trim();
-        if (target) {
-            // Check if it's a known app or website
-            if (target.includes('.') && !target.includes(' ')) {
-                // Likely a website
-                const url = target.startsWith('http') ? target : `https://${target}`;
-                await open(url);
-                responseText = `Opening ${target}`;
-                action = 'open_url';
-            } else {
-                // Try opening as app
-                responseText = openApplication(target);
-                action = 'open_app';
-            }
+// Open Website
+if (lowerPrompt.startsWith('open ')) {
+    const target = prompt.substring(5).trim();
+    if (target) {
+        // Check if it's a known app or website
+        if (target.includes('.') && !target.includes(' ')) {
+            const url = target.startsWith('http') ? target : `https://${target}`;
+            responseText = `Open this URL in your browser: ${url}`;
+            action = 'open_url';
+            return res.json({ reply: responseText, action, url });
+        } else {
+            // Try opening as app
+            responseText = openApplication(target);
+            action = 'open_app';
         }
     }
+}
     // Play on YouTube
     else if (lowerPrompt.startsWith('play ') || lowerPrompt.includes(' play ')) {
         // Extract song name properly
