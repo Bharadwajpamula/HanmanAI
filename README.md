@@ -1,4 +1,4 @@
-# 🦅 Hanuman AI - Your Personal Desktop Assistant
+# Hanuman AI - Your Personal Desktop Assistant
 
 Hanuman AI is a powerful voice-activated desktop assistant that combines the intelligence of Google's Gemini AI with local system control. It allows you to control your computer, play music, and have intelligent conversations using natural language or voice commands.
 
